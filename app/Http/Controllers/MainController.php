@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ItemKeranjang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 use App\Models\Book;
 use App\Models\User;
@@ -18,8 +19,6 @@ use App\Models\ReqTopUp;
 use App\Models\SaldoHistories;
 use App\Models\TerbitBuku;
 use LDAP\Result;
-
-use function Laravel\Prompts\alert;
 
 class MainController extends Controller
 {
@@ -34,8 +33,8 @@ class MainController extends Controller
     public function ceklogin(Request $request)
     {
         if (Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
-            $request->session()->regenerate(); // hindari session fixation attack
-            $user = Auth::user(); // ambil user yang barusan login
+            $request->session()->regenerate();
+            $user = Auth::user();
 
             if ($user->username === 'deden') {
                 return redirect('/admin/buku')->with('success', 'Selamat datang, Admin!');
@@ -56,9 +55,9 @@ class MainController extends Controller
         $user->nama = $request->nama;
         $user->email = $request->email;
         $user->no_telp = $request->no_telp;
-        $user->city = $request->city;
+        $user->kota = $request->kota;
         $user->username = $request->username;
-        $user->password = password_hash($request->password, PASSWORD_DEFAULT);
+        $user->password = bcrypt($request->password);
         $user->save();
 
         return redirect('/')->with('alert', 'Registrasi berhasil! Silakan login.');
@@ -87,7 +86,13 @@ class MainController extends Controller
     {
         $books = Book::get();
         $diskon = Diskon::get();
-        return view('user.promo', ['active' => 'promo', 'books' => $books, 'diskon' => $diskon]);
+        return view('user.promo.index', ['active' => 'promo', 'books' => $books, 'diskon' => $diskon]);
+    }
+    public function detail_promo($id)
+    {
+        $books = Book::where('diskon_id', '=', $id)->get();
+        $diskon = Diskon::where('diskon_id', '=', $id)->first();
+        return view('user.promo.detail', ['books' => $books, 'diskon' => $diskon, 'active' => 'promo']);
     }
     public function penerbitan()
     {
@@ -97,7 +102,7 @@ class MainController extends Controller
     {
         $cate = Category::where('nama_kategori', '=', $jenis)->first();
         $books = Book::where('kategori_id', '=', $cate->kategori_id)->get();
-        return view('user.kategori', ['active' => 'kategori', 'key' => $jenis, 'books' => $books]);
+        return view('user.kategori', ['active' => 'kategori', 'key' => $jenis, 'books' => $books, 'cate' => $cate]);
     }
     public function checkout(Request $request)
     {
@@ -109,22 +114,54 @@ class MainController extends Controller
 
         $items = ItemKeranjang::whereIn('cartItems_id', $ids)->with('buku')->get();
 
-        return view('user.checkout', ['items' => $items, 'active' => 'cart', 'total' => $request->total]);
+        return view('user.checkout', ['items' => $items, 'active' => 'cart', 'total' => $request->total, 'ids' => $ids]);
     }
-    public function order(Request $request){
+    public function order(Request $request)
+    {
+        $cart = Keranjang::where('user_id', '=', Auth::id())->first();
         $order = new Order();
         $order->user_id = Auth::id();
         $order->total_harga = $request->total;
-        // $order->diskon_id = $request->diskon_id; -- Masih salah
+        $order->diskon_id = $cart->diskon_id;
         $order->status = 'lunas';
         $order->save();
 
-        $order = Order::where('user_id', '=', Auth::id())->first();
+        $ids = $request->input('ids', []);
+        $order = Order::where('user_id', '=', Auth::id())->latest()->first();
         $cart = Keranjang::where('user_id', '=', Auth::id())->first();
-        $cartItems = ItemKeranjang::where('cart_id', '=', $cart->cart_id)->get();
-        $orderItems = new OrderItems();
-        $orderItems->order_id = $order->order_id;
+        $cartItems = ItemKeranjang::where('cart_id', '=', $cart ? $cart->cart_id : null)
+            ->whereIn('cartItems_id', $ids)
+            ->get();
 
+        foreach ($cartItems as $ci) {
+            $orderItems = new OrderItems();
+            $orderItems->order_id = $order->order_id;
+            $orderItems->buku_id = $ci->buku_id;
+            $orderItems->jumlah = $ci->jumlah;
+            $orderItems->harga_now = $ci->harga;
+            $orderItems->save();
+        }
+
+        // Delete only the purchased cart items
+        ItemKeranjang::whereIn('cartItems_id', $request->ids)->delete();
+
+        // If cart is empty after purchase, delete the cart
+        if ($cart && ItemKeranjang::where('cart_id', $cart->cart_id)->count() == 0) {
+            $cart->delete();
+        }
+
+        $user = User::find(Auth::id());
+        $user->saldo -= $order->total_harga;
+        $user->save();
+
+        $saldoHistories = new SaldoHistories();
+        $saldoHistories->user_id = Auth::id();
+        $saldoHistories->tipe = 'beli';
+        $saldoHistories->jumlah = $order->total_harga;
+        $saldoHistories->keterangan = '';
+        $saldoHistories->save();
+
+        return redirect('/profile')->with('success', 'Buku berhasil dibeli!');
     }
     public function search(Request $request, $asal)
     {
@@ -237,16 +274,58 @@ class MainController extends Controller
     public function profile()
     {
         // Contoh mengambil data dari tabel 'users'
-        $users = Auth::user();
+        $user = Auth::user();
         $orders = Order::where('user_id', '=', Auth::id())->get();
         $saldoHistories = SaldoHistories::where('user_id', '=', Auth::id())->get();
-        return view('user.profile.index', ['users' => $users, 'active' => 'profile', 'orders' => $orders, 'saldoHistories' => $saldoHistories]);
+
+        // Ambil semua order_id milik user
+        $orderIds = $orders->pluck('order_id')->toArray();
+        // Ambil semua order items berdasarkan order_id
+        $orderItems = OrderItems::whereIn('order_id', $orderIds)->get();
+        // Ambil semua buku_id dari order items
+        $bookIds = $orderItems->pluck('buku_id')->toArray();
+        // Ambil semua buku berdasarkan buku_id
+        $books = Book::whereIn('buku_id', $bookIds)->get();
+
+        return view('user.profile.index', [
+            'user' => $user,
+            'active' => 'profile',
+            'orders' => $orders,
+            'saldoHistories' => $saldoHistories,
+            'books' => $books
+        ]);
     }
-    public function topup_profile()
+    public function edit_profile(Request $request){
+        $user = User::where('id', '=', Auth::id())->first();
+        if ($request->hasFile('foto')) {
+            $filename = time() . '_' . $request->file('foto')->getClientOriginalName();
+            $request->file('foto')->move(public_path('profil'), $filename);
+            $user->foto = 'profil/' . $filename;
+        }
+        $user->nama = $request->nama;
+        $user->email = $request->email;
+        $user->no_telp = $request->no_telp;
+        $user->desa = ucfirst($request->desa);
+        $user->kecamatan = ucfirst($request->kecamatan);
+        $user->kota = ucfirst($request->kota);
+        $user->save();
+
+        return redirect('/profile')->with('success', 'Profil berhasil diupdate!');
+    }
+    public function gantiPass_profile(Request $request)
     {
-        return view('user.profile.topup', ['active' => 'profile']);
+        $user = User::find(Auth::id());
+        $user->password = bcrypt($request->new_pw);
+        $user->save();
+
+        return redirect('/profile')->with('success', 'Password berhasil diganti!');
     }
-    public function req_topup(Request $request)
+    public function checkPassword(Request $request)
+    {
+        $valid = Hash::check($request->password, Auth::user()->password);
+        return response()->json(['valid' => $valid, 'active' => 'profile']);
+    }
+    public function topup_profile(Request $request)
     {
         $reqTopup = new ReqTopUp();
         $reqTopup->user_id = Auth::id();
@@ -501,7 +580,7 @@ class MainController extends Controller
         $user->nama = $request->nama;
         $user->email = $request->email;
         $user->no_telp = $request->no_telp;
-        $user->city = $request->city;
+        $user->kota = $request->kota;
         $user->username = $request->username;
         $user->password = password_hash($request->password, PASSWORD_DEFAULT);
         $user->save();

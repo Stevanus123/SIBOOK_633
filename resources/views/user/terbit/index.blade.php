@@ -1,12 +1,10 @@
 @extends('layouts.main')
-@section('title')
-<title>SIBOOK | Penerbitan Buku</title>
-
+@section('title', 'SIBOOK | Penerbitan Buku')
 @section('content')
 	<!-- tampilan ajakan input buku -->
-	<div class="row py-4 border-bottom">
+	<div class="row my-3 border bg-white shadow-sm" style="border-radius: 10px">
 		<!-- ajakan penerbitan -->
-		<div class="py-5 text-white">
+		<div class="py-5">
 			<div class="container text-center">
 				<p class="fw-bold fs-5">
 					<span>Sudah Terbukti,</span> Ribuan Penulis Telah Kami Terbitkan
@@ -26,7 +24,7 @@
 	</div>
 
 	<!-- testimoni -->
-	<div class="row py-5">
+	<div class="row my-3 py-5 bg-white shadow-sm" style="border-radius: 10px">
 		<div class="col text-center">
 			<h6 class="fw-bold">Testimoni</h6>
 			<h1 class="fw-bold display-5 mb-3">Apa Kata Mereka?</h1>
@@ -35,7 +33,7 @@
 				<div class="carousel-inner">
 					<!-- Slide 1 -->
 					<div class="carousel-item active">
-						<div class="card mx-auto border-0" style="width: 60rem">
+						<div class="card mx-auto border-0" style="width: 60rem;">
 							<div class="card-header d-flex align-items-center my-2">
 								<img src="icon/orang-1.jpeg" class="border rounded-circle me-4" width="10%" />
 								<div class="text-start">

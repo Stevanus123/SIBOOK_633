@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigIncrements('order_id');
             $table->unsignedBigInteger('user_id');
             $table->integer('total_harga');
-            $table->unsignedBigInteger('diskon_id');
+            $table->unsignedBigInteger('diskon_id')->nullable();
             $table->enum('status', ['lunas', 'tunda', 'gagal']);
             $table->timestamps();
 

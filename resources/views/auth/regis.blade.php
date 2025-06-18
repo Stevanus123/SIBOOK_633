@@ -63,8 +63,8 @@
                 <input type="tel" name="no_telp" class="form-control" id="no_telp" required>
               </div>
               <div class="mb-3">
-                <label for="city" class="form-label">Kota Sekarang</label>
-                <input type="text" name="city" class="form-control" id="city" required>
+                <label for="kota" class="form-label">Kota Sekarang</label>
+                <input type="text" name="kota" class="form-control" id="kota" required>
               </div>
               <div class="d-flex justify-content-between">
                 <a class="btn fw-bold" style="color: #9d654a; width: 160px;" href="/">

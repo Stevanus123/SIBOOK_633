@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->enum('tipe', ['beli', 'topup', ]);
             $table->integer('jumlah');
-            $table->string('keterangan', 255);
+            $table->string('keterangan', 255)->nullable();
             $table->timestamps();
 
              $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');

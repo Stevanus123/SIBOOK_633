@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
                 'email' => 'stevanusdenko46@gmail.com',
                 'password' => bcrypt('rahasia2025'),
                 'no_telp' => '081234567890',
-                'city' => 'Jakarta',
+                'kota' => 'Jakarta',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
                 'email' => 'samuel@gmail.com',
                 'password' => bcrypt('rahasia2025'),
                 'no_telp' => '082345678901',
-                'city' => 'Bandung',
+                'kota' => 'Bandung',
                 'created_at' => now(),
                 'updated_at' => now()
             ]

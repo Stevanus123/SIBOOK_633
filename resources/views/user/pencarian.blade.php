@@ -1,29 +1,27 @@
 @extends('layouts.main')
-@section('title')
-<title>SIBOOK | Cari Buku</title>
-
+@section('title', 'SIBOOK | Cari Buku')
 @section('content')
-    <div class="container mt-4">
-        <h4>Hasil Pencarian: "{{ $query }}"</h4>
-        @if($books->count() > 0)
-            <div class="row">
-                @foreach($books as $book)
-                    <div class="col-md-2 mb-3">
-                        <a href="/{{ $active }}/buku/{{\Illuminate\Support\Str::slug($book->judul) }}"
-                            class=" text-decoration-none">
-                            <div class="card h-100">
-                                <img src="{{ asset($book->gambar) }}" alt="{{ $book->judul }}">
-                                <div class="card-body">
-                                    <h6 class="card-title">{{ $book->judul }}</h6>
-                                    <p class="card-text">Harga: Rp. {{ number_format($book->harga, 0, ',', '.') }}</p>
-                                </div>
-                            </div>
+    <div class="row my-3 card shadow-sm" style="border-radius: 10px">
+        <h3 class="my-3 card-header">Hasil Pencarian: "{{ $query }}"</h3>
+        <div class="d-flex justify-content-center">
+            <div class="row row-cols-6 card-body">
+                @if ($books->count() > 0)
+                    @foreach ($books as $book)
+                        <a class="col text-decoration-none mb-3"
+                            href="/{{ $active }}/buku/{{ \Illuminate\Support\Str::slug($book->judul) }}">
+                            <img src="{{ asset($book->gambar) }}" alt="{{ $book->judul }}" height="250em" width="180em" />
+                            <h6>{{ \Illuminate\Support\Str::limit($book->judul, 20) }}</h6>
+                            <p>Rp. {{ number_format($book->harga, 0, ',', '.') }}</p>
                         </a>
+                    @endforeach
+                @else
+                    <div class="col-12 text-center">
+                        <img src="{{ asset('icon/empty-book.png') }}" alt="Tidak ada buku" width="120" class="mb-3" />
+                        <p class="text-muted" style="font-size: 18px">Buku yang kamu cari belum tersedia.<br>Silakan cek
+                            kembali nanti.</p>
                     </div>
-                @endforeach
+                @endif
             </div>
-        @else
-            <p>Tidak ditemukan buku yang sesuai.</p>
-        @endif
+        </div>
     </div>
 @endsection

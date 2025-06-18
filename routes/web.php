@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Route;
 Route::fallback([MainController::class, 'not_found']);
 
 
+Route::get('/search/{asal}', [MainController::class, 'search']);
+
 Route::middleware('guest')->group(function () {
-    Route::get('/', [MainController::class, 'login'])->name('login');
+    Route::get('/', [MainController::class, 'home']);
+    Route::get('/login', [MainController::class, 'login'])->name('login');
     Route::get('/regis', [MainController::class, 'regis']);
     Route::post('/prosesRegis', [MainController::class, 'prosesRegis']);
     Route::post('/ceklogin', [MainController::class, 'ceklogin']);
@@ -17,30 +20,36 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     // user
     Route::get('/home', [MainController::class, 'home']);
+    
+    // promo
     Route::get('/promo', [MainController::class, 'promo']);
-    Route::get('/kategori/{jenis}', [MainController::class, 'kategori']);
+    Route::get('/promo/{id}', [MainController::class, 'detail_promo']);
     
     // profile
     Route::get('/profile', [MainController::class, 'profile']);
-    Route::get('/profile/edit', [MainController::class, 'edit_profile']);
-    Route::get('/profile/topup', [MainController::class, 'topup_profile']);
-    Route::post('/topup/request', [MainController::class, 'req_topup']);
+    Route::post('/profile/topup', [MainController::class, 'topup_profile']);
+    Route::post('/profile/edit', [MainController::class, 'edit_profile']);
+    Route::post('/profile/gantiPass', [MainController::class, 'gantiPass_profile']);
+    Route::post('/profile/check-password', [MainController::class, 'checkPassword']);
     
     // search
-    Route::get('/{asal}/search', [MainController::class, 'search']);
-    
+    // Route::get('/search/{asal}', [MainController::class, 'search']);
+
+    //kategori
+    Route::get('/kategori/{jenis}', [MainController::class, 'kategori']);
+
     // cart
     Route::get('/cart', [MainController::class, 'cart']);
     Route::get('/cart/insert/{id}', [MainController::class, 'insert_cart']);
     Route::get('/cart/{act}/{id}', [MainController::class, 'cart_p_m']);
-    
+
     // order
     Route::post('/checkout', [MainController::class, 'checkout']);
     Route::post('/order', [MainController::class, 'order']);
 
     // detail
     Route::get('/{asal}/buku/{slug}', [MainController::class, 'detail_buku']);
-    
+
     // penerbitan
     Route::get('/penerbitan', [MainController::class, 'penerbitan']);
     Route::get('/terbit/insert', [MainController::class, 'insert_terbit']);
@@ -55,8 +64,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/user', [MainController::class, 'admin_user']);
         Route::get('/terbit', [MainController::class, 'admin_terbit']);
         Route::get('/saldo', [MainController::class, 'admin_saldo']);
+        Route::get('/saldo-detail', [MainController::class, 'detail_saldo']);
         Route::post('/saldo/{act}/{id}', [MainController::class, 'act_saldo']);
-        
+
         // detail
         Route::get('/terbit/detail/{id}', [MainController::class, 'detail_terbit']);
 
@@ -69,7 +79,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/buku/store', [MainController::class, 'store_buku']);
         Route::post('/kategori/store', [MainController::class, 'store_kategori']);
         Route::post('/diskon/store', [MainController::class, 'store_diskon']);
-        Route::post('/user/store', [MainController::class, 'store_user']); 
+        Route::post('/user/store', [MainController::class, 'store_user']);
 
         // update
         Route::get('/buku/edit/{id}', [MainController::class, 'edit_buku']);
@@ -89,4 +99,3 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/logout', [MainController::class, 'logout']);
 });
-

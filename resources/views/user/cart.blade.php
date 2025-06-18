@@ -1,6 +1,5 @@
 @extends('layouts.main')
-@section('title')
-<title>SIBOOK | Keranjang Belanja</title>
+@section('title', 'SIBOOK | Keranjang Belanja')
 @section('content')
     <!-- tampilan cart -->
     <div class="row my-3">
@@ -13,7 +12,7 @@
                 @csrf
                 <div class="row">
                     <div class="col-8">
-                        <div class="table-responsive my-3 shadow" style="overflow: hidden; border-radius: 10px">
+                        <div class="table-responsive my-3 shadow bg-white" style="overflow: hidden; border-radius: 10px">
                             <table class="table table-striped table-hover">
                                 <thead style="background-color: blanchedalmond">
                                     <tr>
@@ -57,7 +56,7 @@
 
                     <!-- total  -->
                     <div class="col">
-                        <div class="my-3 pb-3 shadow" style="border-radius: 10px; overflow: hidden">
+                        <div class="my-3 pb-3 shadow bg-white" style="border-radius: 10px; overflow: hidden">
                             <h6 class="py-2 fw-bold ps-3 border-bottom border-dark" style="background-color: blanchedalmond">
                                 Total Pembayaran
                             </h6>
@@ -78,7 +77,7 @@
                                     <td>Diskon</td>
                                     <td>Rp.
                                         {{ number_format(
-                $subtotal * ($cart->diskon->persen / 100),
+                $cart->diskon ? $subtotal * ($cart->diskon->persen / 100) : 0,
                 0,
                 ',',
                 '.',
@@ -89,7 +88,7 @@
                                     <td>Total</td>
                                     <td>Rp.
                                         {{ number_format(
-                $subtotal - ($subtotal * ($cart->diskon->persen / 100)),
+                $subtotal - ($cart->diskon ? $subtotal * ($cart->diskon->persen / 100) : 0),
                 0,
                 ',',
                 '.',
@@ -97,7 +96,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <input type="hidden" name="total" value="{{ $subtotal - ($subtotal * ($cart->diskon->persen / 100)) }}">
+                            <input type="hidden" name="total" value="{{ $subtotal - ($cart->diskon ? $subtotal * ($cart->diskon->persen / 100) : 0) }}">
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary">Lanjut Pembayaran</button>
                             </div>

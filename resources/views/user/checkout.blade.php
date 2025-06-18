@@ -1,8 +1,6 @@
 @extends('layouts.main')
 
-@section('title')
-<title>SIBOOK | Checkout</title>
-
+@section('title', 'SIBOOK | Checkout')
 @section('content')
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="mt-3">
         <ol class="breadcrumb">
@@ -57,6 +55,9 @@
                         <form action="/order" method="POST">
                             @csrf
                             <input type="hidden" name="total" value="{{ $total }}">
+                            @foreach ($ids as $id)
+                                <input type="hidden" name="ids[]" value="{{ $id }}">
+                            @endforeach
                             <button type="submit" class="btn btn-success w-100 mt-4">💳 Bayar Sekarang</button>
                         </form>
                     @endif

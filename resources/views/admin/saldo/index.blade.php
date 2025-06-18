@@ -32,6 +32,7 @@
                             <td>{{ $rt->alasan }}</td>
                             <td>{{ $rt->status }}</td>
                             <td>
+                                @if($rt->status == 'menunggu')
                                 <!-- Tombol Setujui yang memicu modal -->
                                 <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approveModal{{ $rt->id }}">
                                     Setujui
@@ -95,6 +96,11 @@
                                         </form>
                                     </div>
                                 </div>
+                                @else
+                                <a href="/saldo-detail" class="btn btn-primary btn-sm">
+                                    Detail
+                                </a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

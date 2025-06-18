@@ -1,7 +1,5 @@
 @extends('layouts.main')
-@section('title')
-    <title>SIBOOK | Pengisian Form Penerbitan</title>
-
+@section('title', 'SIBOOK | Pengisian Form Penerbitan')
 @section('content')
     <!-- form terbit buku -->
     <div class="row my-2">

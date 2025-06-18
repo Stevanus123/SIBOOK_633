@@ -21,11 +21,14 @@ class User extends Authenticatable
     protected $table = 'user';
     protected $fillable = [
         'nama',
+        'foto',
         'username',
         'password',
         'email',
         'no_telp',
-        'city'
+        'desa',
+        'kecamatan',
+        'kota',
     ];
 
     /**
