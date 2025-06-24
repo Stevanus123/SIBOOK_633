@@ -16,32 +16,52 @@
     @else
         @foreach ($diskon as $d)
             <div class="row my-3 card shadow-sm" style="border-radius: 10px">
-                <div class="card-header">
-                    Promo: {{ $d->nama_diskon }} (Kode: {{ $d->kode }})
+                <div class="card-header d-flex justify-content-between align-items-center bg-warning"
+                    style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                    <span>
+                        <i class="bi bi-gift-fill me-2"></i>
+                        Promo: <strong>{{ $d->nama_diskon }}</strong>
+                    </span>
+                    <span class="badge bg-success text-white" style="font-size: 1em;">
+                        Kode: {{ $d->kode }}
+                    </span>
                 </div>
                 <div class="card-body">
-                    <div class="row row-cols-5">
-                        @if ($books->where('diskon_id', $d->diskon_id)->isEmpty())
-                            <div class="col">
-                                <p class="text-muted">Tidak ada buku untuk promo ini.</p>
-                            </div>
-                        @else
-                            @foreach ($books->where('diskon_id', $d->diskon_id)->take(10) as $book)
-                                <a href="{{ url('/promo/buku/' . \Illuminate\Support\Str::slug($book->judul)) }}"
-                                    class="col book-card m-2 pt-3 border">
-                                    <div class="mx-1">
-                                        <img src="{{ asset($book->gambar) }}" alt="{{ $book->judul }}" height="300em" />
-                                        <h6>{{ \Illuminate\Support\Str::limit($book->judul, 20) }}</h6>
-                                        <p>Rp. {{ number_format($book->harga, 0, ',', '.') }}</p>
-                                    </div>
-                                </a>
-                            @endforeach
-                            @if ($books->where('diskon_id', $d->diskon_id)->count() > 10)
-                                <div class="col-12 text-end">
-                                    <a href="/promo/{{ $d->diskon_id }}" class="py-4 px-4">Lihat Selengkapnya</a>
+                    <div class="container-fluid d-flex justify-content-center ">
+                        <div class="d-flex justify-content-start row row-cols-5 " style="width: 110%">
+                            @if ($books->where('diskon_id', $d->diskon_id)->isEmpty())
+                                <div class="col-12">
+                                    <p class="text-muted">Buku untuk promo ini akan segera hadir.</p>
                                 </div>
+                            @else
+                                @foreach ($books->where('diskon_id', $d->diskon_id)->take(10) as $b)
+                                    <a href="{{ url('/detail/promo/buku/' . \Illuminate\Support\Str::slug($b->judul)) }}"
+                                        class="col book-card m-2 pt-3 border">
+                                        <div class="mx-1">
+                                            <img src="{{ asset($b->gambar) }}" alt="{{ $b->judul }}"
+                                                height="300em" />
+                                            <h6>{{ \Illuminate\Support\Str::limit($b->judul, 40) }}</h6>
+                                            <p>
+                                                @if ($b->dibeli)
+                                                    <span class="badge bg-success" style="font-size: 1em;">
+                                                        Dibeli
+                                                    </span>
+                                                @else
+                                                    <span class="badge bg-danger" style="font-size: 1em;">
+                                                        Rp. {{ number_format($b->harga, 0, ',', '.') }}
+                                                    </span>
+                                                @endif
+                                            </p>
+                                        </div>
+                                    </a>
+                                @endforeach
+                                @if ($books->where('diskon_id', $d->diskon_id)->count() > 10)
+                                    <div class="col-12 text-end">
+                                        <a href="/promo/{{ $d->diskon_id }}" class="py-4 px-4">Lihat Selengkapnya</a>
+                                    </div>
+                                @endif
                             @endif
-                        @endif
+                        </div>
                     </div>
                 </div>
             </div>

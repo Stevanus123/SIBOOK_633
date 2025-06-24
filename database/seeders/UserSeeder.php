@@ -33,7 +33,27 @@ class UserSeeder extends Seeder
                 'kota' => 'Bandung',
                 'created_at' => now(),
                 'updated_at' => now()
-            ]
+            ],
+            [
+                'nama' => 'Ayu Lestari',
+                'username' => 'ayu',
+                'email' => 'ayu@gmail.com',
+                'password' => bcrypt('rahasia2025'),
+                'no_telp' => '083456789012',
+                'kota' => 'Yogyakarta',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'nama' => 'Rizky Pratama',
+                'username' => 'rizky',
+                'email' => 'rizky@gmail.com',
+                'password' => bcrypt('rahasia2025'),
+                'no_telp' => '084567890123',
+                'kota' => 'Surabaya',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
         ]);
     }
 }

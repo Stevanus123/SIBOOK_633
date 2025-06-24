@@ -26,11 +26,11 @@
                 <tbody>
                     @foreach ($reqTopup as $index => $rt)
                         <tr>
-                            <td>{{ $index + 1 }}</td>
+                            <td class="text-center">{{ $index + 1 }}</td>
                             <td>{{ $rt->user->nama }}</td>
-                            <td>Rp. {{ number_format($rt->jumlah, 0, ',', '.') }}</td>
+                            <td class="text-end">Rp. {{ number_format($rt->jumlah, 0, ',', '.') }}</td>
                             <td>{{ $rt->alasan }}</td>
-                            <td>{{ $rt->status }}</td>
+                            <td>{{ ucfirst($rt->status) }}</td>
                             <td>
                                 @if($rt->status == 'menunggu')
                                 <!-- Tombol Setujui yang memicu modal -->
@@ -106,7 +106,7 @@
                     @endforeach
                     @if ($reqTopup->isEmpty())
                         <tr>
-                            <td colspan="7" class="text-center">Belum ada data permintaan saldo.</td>
+                            <td colspan="6" class="text-center">Belum ada data permintaan saldo.</td>
                         </tr>
                     @endif
                 </tbody>

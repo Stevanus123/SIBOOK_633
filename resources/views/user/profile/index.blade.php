@@ -1,8 +1,10 @@
 @extends('layouts.main')
 @section('title', 'SIBOOK | Profile')
 @section('content')
-    <div class="container py-4">
-        <h2 class="mb-4">👤 Profil Saya</h2>
+    <div class="container-fluid py-3">
+        <div class="d-flex align-items-center my-3 justify-content-between">
+            <h2 class="">👤 Profil Saya</h2>
+        </div>
 
         <div class="row">
             {{-- Sidebar Kiri --}}
@@ -19,7 +21,8 @@
 
                     <div class="mt-3">
                         <!-- Button Modal Top Up Saldo -->
-                        <a href="#" class="btn btn-success w-100 mb-2" data-bs-toggle="modal" data-bs-target="#topupModal">💸 Top Up Saldo</a>
+                        <a href="#" class="btn btn-success w-100 mb-2" data-bs-toggle="modal"
+                            data-bs-target="#topupModal">💸 Top Up Saldo</a>
 
                         <!-- Modal Top Up Saldo -->
                         <div class="modal fade" id="topupModal" tabindex="-1" aria-labelledby="topupModalLabel"
@@ -35,15 +38,19 @@
                                     <div class="modal-body text-start">
                                         <div class="mb-3">
                                             <label for="nominal_topup" class="form-label">Nominal Top Up</label>
-                                            <input type="number" class="form-control" id="nominal_topup" name="jumlah" min="1000" max="200000" required placeholder="Masukkan nominal (max. 200.000)">
+                                            <input type="number" class="form-control" id="nominal_topup" name="jumlah"
+                                                min="1000" max="200000" required
+                                                placeholder="Masukkan nominal (max. 200.000)">
                                         </div>
                                         <div class="mb-3">
                                             <label for="alasan_topup" class="form-label">Alasan</label>
-                                            <input type="text" class="form-control" id="alasan_topup" name="alasan" required placeholder="Contoh: Isi saldo untuk beli buku">
+                                            <input type="text" class="form-control" id="alasan_topup" name="alasan"
+                                                required placeholder="Contoh: Isi saldo untuk beli buku">
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="resetTopupModal()">Batal</button>
+                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                                            onclick="resetTopupModal()">Batal</button>
                                         <button type="submit" class="btn btn-primary">Top Up</button>
                                     </div>
                                 </form>
@@ -102,8 +109,8 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="edit_kecamatan" class="form-label">Kecamatan Sekarang</label>
-                                            <input type="text" class="form-control" id="edit_kecamatan" name="kecamatan"
-                                                value="{{ $user->kecamatan }}">
+                                            <input type="text" class="form-control" id="edit_kecamatan"
+                                                name="kecamatan" value="{{ $user->kecamatan }}">
                                         </div>
                                         <div class="mb-3">
                                             <label for="edit_kota" class="form-label">Kota Sekarang</label>
@@ -150,8 +157,9 @@
                             data-bs-target="#gantiPassword">🔒 Ganti Password</a>
 
                         <!-- Modal Ganti Password -->
-                        <div class="modal fade" id="gantiPassword" tabindex="-1" aria-labelledby="gantiPasswordModalLabel"
-                            aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                        <div class="modal fade" id="gantiPassword" tabindex="-1"
+                            aria-labelledby="gantiPasswordModalLabel" aria-hidden="true" data-bs-backdrop="static"
+                            data-bs-keyboard="false">
                             <div class="modal-dialog">
                                 <form action="/profile/gantiPass" method="POST" class="modal-content">
                                     @csrf
@@ -319,11 +327,46 @@
                     <p><strong>Tanggal Bergabung:</strong> {{ $user->created_at->format('d M Y') }}</p>
                 </div>
 
-                {{-- Riwayat Pesanan --}}
+                {{-- Riwayat Saldo --}}
+                <div class="card shadow p-4 my-4">
+                    <h5 class="mb-3">💰 Riwayat Saldo</h5>
+                    @if ($saldoHistories->isEmpty())
+                        <p class="text-muted">Belum ada aktivitas saldo.</p>
+                    @else
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tanggal</th>
+                                    <th>Tipe</th>
+                                    <th>Jumlah</th>
+                                    <th>Keterangan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($saldoHistories as $s)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $s->created_at->format('d M Y H:i') }}</td>
+                                        <td>{{ ucfirst($s->tipe) }}</td>
+                                        <td
+                                            class="{{ $s->tipe == 'topup' || $s->tipe == 'reward' ? 'text-success' : 'text-danger' }}">
+                                            {{ $s->tipe == 'topup' || $s->tipe == 'reward' ? '+' : '-' }}Rp.
+                                            {{ number_format(abs($s->jumlah), 0, ',', '.') }}
+                                        </td>
+                                        <td>{{ $s->keterangan }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @endif
+                </div>
+
+                {{-- Riwayat Pembelian --}}
                 <div class="card shadow p-4">
                     <h5 class="mb-3">🛍️ Riwayat Pembelian</h5>
                     @if ($orders->isEmpty())
-                        <p class="text-muted">Belum ada pesanan.</p>
+                        <p class="text-muted">Belum ada pembelian buku.</p>
                     @else
                         <table class="table table-bordered">
                             <thead>
@@ -349,8 +392,8 @@
                 </div>
 
                 {{-- Daftar buku yang dibeli --}}
-                <div class="card shadow p-4 mt-4">
-                    <h5 class="mb-3">📚 Buku yang Pernah Dibeli</h5>
+                <div class="card shadow p-4 my-4">
+                    <h5 class="mb-3">📚 Buku yang Sudah Dibeli</h5>
 
                     @if ($books->isEmpty())
                         <p class="text-muted">Belum ada buku yang dibeli.</p>
@@ -362,42 +405,82 @@
                                         <strong>{{ $book->judul }}</strong> <br>
                                         <small class="text-muted">oleh {{ $book->penulis }}</small>
                                     </div>
-                                    <a href="/profile/buku/{{ Str::slug($book->judul) }}"
-                                        class="btn btn-sm btn-outline-primary">Detail</a>
+                                    <a href="/profile/baca/{{ Str::slug($book->judul) }}"
+                                        class="btn btn-sm btn-outline-primary">Baca Buku</a>
                                 </li>
                             @endforeach
                         </ul>
                     @endif
                 </div>
 
-
-                {{-- Riwayat Saldo --}}
-                <div class="card shadow p-4 mt-4">
-                    <h5 class="mb-3">💰 Riwayat Saldo</h5>
-                    @if ($saldoHistories->isEmpty())
-                        <p class="text-muted">Belum ada aktivitas saldo.</p>
+                {{-- Riwayat Pengajuan --}}
+                <div class="card shadow p-4">
+                    <h5 class="mb-3">🛍️ Riwayat Pengajuan</h5>
+                    @if ($terbit->isEmpty())
+                        <p class="text-muted">Belum ada pengajuan buku.</p>
                     @else
                         <table class="table table-bordered">
                             <thead>
-                                <tr>
+                                <tr class="text-center">
                                     <th>#</th>
+                                    <th>Judul</th>
                                     <th>Tanggal</th>
-                                    <th>Tipe</th>
-                                    <th>Jumlah</th>
-                                    <th>Keterangan</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($saldoHistories as $s)
+                                @foreach ($terbit as $t)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $s->created_at->format('d M Y H:i') }}</td>
-                                        <td>{{ ucfirst($s->tipe) }}</td>
-                                        <td class="{{ $s->tipe == 'topup' ? 'text-success' : 'text-danger' }}">
-                                            {{ $s->tipe == 'topup' ? '+' : '-' }}Rp.
-                                            {{ number_format(abs($s->jumlah), 0, ',', '.') }}
-                                        </td>
-                                        <td>{{ $s->keterangan }}</td>
+                                        <td>{{ $t->judul }}</td>
+                                        <td>{{ $t->created_at->format('d M Y') }}</td>
+                                        <td>{{ ucfirst($t->status) }}</td>
+                                        @if ($t->status == 'menunggu')
+                                            <td class="text-center">
+                                                <a href="/terbit/edit/{{ $t->id }}"
+                                                    class="btn btn-warning btn-sm">✏️
+                                                    Edit</a>
+                                                <button type="button" class="btn btn-danger btn-sm"
+                                                    data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                                    🗑️ Hapus
+                                                </button>
+
+                                                {{-- Modal Konfirmasi Hapus --}}
+                                                <div class="modal fade" id="deleteModal" tabindex="-1"
+                                                    aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="deleteModalLabel">Konfirmasi
+                                                                    Hapus Penerbitan
+                                                                </h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Apakah Anda yakin ingin menghapus penerbitan ini?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <form action="/terbit/delete/{{ $t->id }}"
+                                                                    method="GET">
+                                                                    @csrf
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Batal</button>
+                                                                    <button type="submit"
+                                                                        class="btn btn-danger">Hapus</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        @else
+                                            <td class="text-center">
+                                                <a href="/profile/terbit/{{ $t->id }}"
+                                                    class="btn btn-sm btn-outline-primary">Lihat Detail</a>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>

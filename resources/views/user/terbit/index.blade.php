@@ -15,7 +15,7 @@
 				</h1>
 				<p>Jangan lewatkan kesempatan ini!</p>
 				<div class="d-flex justify-content-center">
-					<a href="/terbit-buku" class="btn btn-primary btn-lg fw-bold px-4">
+					<a href="/terbit/insert" class="btn btn-primary btn-lg fw-bold px-4">
 						<i class="bi bi-stars me-2"></i>Terbitkan Sekarang
 					</a>
 				</div>

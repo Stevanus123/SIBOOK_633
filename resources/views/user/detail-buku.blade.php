@@ -11,23 +11,30 @@
         <div class="container my-2">
             <div class="row">
                 <div class="col-md-4 text-center">
-                    <img src="{{ asset($books->gambar) }}" class="rounded shadow-sm" alt="{{ $books->judul }}" width="250rem">
+                    <img src="{{ asset($book->gambar) }}" class="rounded shadow-sm" alt="{{ $book->judul }}"
+                        width="250rem">
                 </div>
 
                 <div class="col-md-8 border-start border-2 ps-4">
-                    <h2 class="mb-3">{{ $books->judul }}</h2>
-                    <p><strong>Penulis:</strong> {{ $books->penulis }}</p>
-                    <p><strong>Penerbit:</strong> {{ $books->penerbit }}</p>
-                    <p><strong>Tahun Terbit:</strong> {{ $books->tahun_terbit }}</p>
-                    <p><strong>Kategori:</strong> {{ $books->kategori->nama_kategori }}</p>
-                    <p><strong>Jumlah Halaman:</strong> {{ $books->jumlah_halaman }}</p>
-                    <p><strong>Harga:</strong> Rp{{ number_format($books->harga, 0, ',', '.') }}</p>
+                    <h2 class="mb-3">{{ $book->judul }}</h2>
+                    <p><strong>Penulis:</strong> {{ $book->penulis }}</p>
+                    <p><strong>Penerbit:</strong> {{ $book->penerbit }}</p>
+                    <p><strong>Tahun Terbit:</strong> {{ $book->tahun_terbit }}</p>
+                    <p><strong>Kategori:</strong> {{ $book->kategori->nama_kategori }}</p>
+                    <p><strong>Jumlah Halaman:</strong> {{ $book->jumlah_halaman }}</p>
+                    <p><strong>Harga:</strong> Rp{{ number_format($book->harga, 0, ',', '.') }}</p>
 
                     <hr>
                     <h5>Deskripsi Buku</h5>
-                    <p>{{ $books->deskripsi }}</p>
-                    <a href="/cart/insert/{{ $books->buku_id }}" class="btn btn-primary mt-3">
-                       <i class="bi bi-cart-plus"></i> Tambah ke Keranjang </a>
+                    <p>{{ $book->deskripsi }}</p>
+                    @if ($book->dibeli)
+                        <a href="/profile/baca/{{ Str::slug($book->judul) }}" class="btn btn-sm btn-primary px-3">Baca
+                            Buku</a>
+                    @elseif($book->penulis == auth()->user()->nama)
+                    @else
+                        <a href="/cart/insert/{{ $book->buku_id }}" class="btn btn-primary mt-3">
+                            <i class="bi bi-cart-plus"></i> Tambah ke Keranjang </a>
+                    @endif
                 </div>
             </div>
         </div>

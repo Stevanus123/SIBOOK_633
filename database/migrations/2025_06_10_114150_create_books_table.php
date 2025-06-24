@@ -25,6 +25,7 @@ return new class extends Migration
             $table->unsignedBigInteger('diskon_id')->nullable();
             $table->longText('deskripsi');
             $table->string('gambar', 255);
+            $table->string('file_buku', 255);
             $table->timestamps();
 
             $table->foreign('kategori_id')->references('kategori_id')->on('categories')->onDelete('cascade');

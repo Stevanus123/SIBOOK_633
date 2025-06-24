@@ -1,6 +1,5 @@
 @extends('layouts.admin')
-@section('title')
-<title>Admin SIBOOK | Kelola Buku</title>
+@section('title', 'Admin SIBOOK | Kelola Buku')
 
 @section('judKonten', 'Kelola Buku')
 
@@ -15,7 +14,7 @@
         </div>
         <div class="card-body">
             <table class="table table-hover table-bordered">
-                <thead class="table-dark">
+                <thead class="table-dark text-center">
                     <tr>
                         <th>No</th>
                         <th>Judul</th>
@@ -29,14 +28,14 @@
                 <tbody>
                     @foreach ($books as $index => $book)
                         <tr>
-                            <td>{{ $index + 1 }}</td>
+                            <td class="text-center">{{ $index + 1 }}</td>
                             <td>{{ $book->judul }}</td>
                             <td>{{ $book->penulis }}</td>
-                            <td>Rp. {{ number_format($book->harga, 0, ',', '.') }}</td>
-                            <td>{{ $book->stok }}</td>
+                            <td class="text-end">Rp. {{ number_format($book->harga, 0, ',', '.') }}</td>
+                            <td class="text-center">{{ $book->stok }}</td>
                             <td>{{ $book->kategori->nama_kategori }}</td>
-                            <td>
-                                <a href="/admin/edit/{{ $book->buku_id }}" class="btn btn-warning btn-sm">✏️ Edit</a>
+                            <td class="text-center">
+                                <a href="/admin/buku/edit/{{ $book->buku_id }}" class="btn btn-warning btn-sm">✏️ Edit</a>
                                 <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
                                     data-bs-target="#deleteModal" data-id="{{ $book->buku_id }}">
                                     🗑️ Hapus

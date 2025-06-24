@@ -1,10 +1,7 @@
 @extends('layouts.admin')
-@section('title')
-<title>Admin SIBOOK | Diskon</title>
-
+@section('title', 'Admin SIBOOK | Diskon')
 @section('judKonten', 'Kelola Diskon')
 @section('content')
-
     <!-- Tabel Diskon -->
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -13,7 +10,7 @@
         </div>
         <div class="card-body">
             <table class="table table-hover table-bordered">
-                <thead class="table-dark">
+                <thead class="table-dark text-center">
                     <tr>
                         <th>No</th>
                         <th>Kode</th>
@@ -25,9 +22,9 @@
                 <tbody>
                     @foreach ($disk as $index => $d)
                         <tr>
-                            <td>{{ $index + 1 }}</td>
+                            <td class="text-center">{{ $index + 1 }}</td>
                             <td>{{ $d->kode }}</td>
-                            <td>{{ $d->persen.'%' }}</td>
+                            <td class="text-center">{{ $d->persen . '%' }}</td>
                             @php
                                 $start = \Carbon\Carbon::parse($d->tglMulai);
                                 $end = \Carbon\Carbon::parse($d->tglSelesai);
@@ -35,26 +32,38 @@
                                 if ($start->year == $end->year) {
                                     if ($start->month == $end->month) {
                                         // Contoh: 1 - 5 Juni 2024
-                                        $tanggal = $start->day . ' - ' . $end->day . ' ' . $start->translatedFormat('F Y');
+                                        $tanggal =
+                                            $start->day . ' - ' . $end->day . ' ' . $start->translatedFormat('F Y');
                                     } else {
                                         // Contoh: 28 Mei - 2 Juni 2024
-                                        $tanggal = $start->day . ' ' . $start->translatedFormat('F') . ' - ' . $end->day . ' ' . $end->translatedFormat('F Y');
+                                        $tanggal =
+                                            $start->day .
+                                            ' ' .
+                                            $start->translatedFormat('F') .
+                                            ' - ' .
+                                            $end->day .
+                                            ' ' .
+                                            $end->translatedFormat('F Y');
                                     }
                                 } else {
                                     // Contoh: 28 Desember 2023 - 2 Januari 2024
-                                    $tanggal = $start->day . ' ' . $start->translatedFormat('F Y') . ' - ' . $end->day . ' ' . $end->translatedFormat('F Y');
+                                    $tanggal =
+                                        $start->day .
+                                        ' ' .
+                                        $start->translatedFormat('F Y') .
+                                        ' - ' .
+                                        $end->day .
+                                        ' ' .
+                                        $end->translatedFormat('F Y');
                                 }
                             @endphp
                             <td>{{ $tanggal }}</td>
-                            <td>
+                            <td class="text-center">
                                 <a href="/admin/diskon/edit/{{ $d->diskon_id }}" class="btn btn-warning btn-sm">✏️ Edit</a>
                                 <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
                                     data-bs-target="#deleteModal" data-id="{{ $d->diskon_id }}">
                                     🗑️ Hapus
                                 </button>
-
-                                {{-- ...existing code... --}}
-
                                 {{-- Modal Konfirmasi Hapus --}}
                                 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
                                     aria-hidden="true">
@@ -81,9 +90,9 @@
                                 </div>
 
                                 <script>
-                                    document.addEventListener('DOMContentLoaded', function () {
+                                    document.addEventListener('DOMContentLoaded', function() {
                                         var deleteModal = document.getElementById('deleteModal');
-                                        deleteModal.addEventListener('show.bs.modal', function (event) {
+                                        deleteModal.addEventListener('show.bs.modal', function(event) {
                                             var button = event.relatedTarget;
                                             var diskonId = button.getAttribute('data-id');
                                             var form = document.getElementById('deleteForm');

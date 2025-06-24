@@ -1,52 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Form Insert Data Buku</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-</head>
-
-<body>
-    <div class="container py-5 d-flex justify-content-center align-items-center">
-        <div class="card shadow" style="width: 50%">
-            <div class="card-header bg-primary text-white">
-                <h3 class="mb-0">Insert Data Diskon</h3>
+@extends('layouts.admin')
+@section('title', 'Admin SIBOOK | Insert Diskon')
+@section('judKonten', 'Insert Diskon')
+@section('content')
+    <div class="container-fluid">
+        <form action="/admin/diskon/store" method="POST">
+            <div class="row border p-3 shadow" style="border-radius: 10px;">
+            @csrf
+            <div class="col-md-6 mb-3">
+                <label for="kode" class="form-label">Kode</label>
+                <input type="text" class="form-control" id="kode" name="kode" required>
             </div>
-            <div class="card-body">
-                <form action="/admin/diskon/store" method="POST">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="kode" class="form-label">Kode</label>
-                        <input type="text" class="form-control" id="kode" name="kode" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="persen" class="form-label">Persen</label>
-                        <input type="number" class="form-control" id="persen" name="persen" min="0" max="100" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="tglMulai" class="form-label">Tanggal Mulai</label>
-                        <input type="date" class="form-control" id="tglMulai" name="tglMulai" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="tglSelesai" class="form-label">Tanggal Selesai</label>
-                        <input type="date" class="form-control" id="tglSelesai" name="tglSelesai" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="deskripsi" class="form-label">Deskripsi</label>
-                        <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" required></textarea>
-                    </div>
-
-                    <div class="d-grid gap-2 mt-5">
-                        <button type="submit" class="btn btn-outline-primary">Tambah Data</button>
-                    </div>
-                </form>
+            <div class="col-md-6 mb-3">
+                <label for="persen" class="form-label">Persen</label>
+                <input type="number" class="form-control" id="persen" name="persen" min="0" max="100"
+                    required>
             </div>
-        </div>
+            <div class="col-md-6 mb-3">
+                <label for="tglMulai" class="form-label">Tanggal Mulai</label>
+                <input type="date" class="form-control" id="tglMulai" name="tglMulai" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="tglSelesai" class="form-label">Tanggal Selesai</label>
+                <input type="date" class="form-control" id="tglSelesai" name="tglSelesai" required>
+            </div>
+            <div class="col-md-6 mb-4">
+                <label for="deskripsi" class="form-label">Deskripsi</label>
+                <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" required></textarea>
+            </div>
+
+            <div class=" gap-2 my-3 text-end">
+                <button type="submit" class="btn btn-primary w-25 py-2">Tambah Data</button>
+            </div>
+        </form>
     </div>
-</body>
-
-</html>
+@endsection

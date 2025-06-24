@@ -1,11 +1,7 @@
 @extends('layouts.admin')
-@section('title')
-<title>Admin SIBOOK | User</title>
-
+@section('title', 'Admin SIBOOK | Kelola User')
 @section('judKonten', 'Kelola User')
-
 @section('content')
-
     <!-- Tabel User -->
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -28,20 +24,18 @@
                 <tbody>
                     @foreach ($user as $index => $u)
                         <tr>
-                            <td>{{ $index + 1 }}</td>
+                            <td class="text-center">{{ $index + 1 }}</td>
                             <td>{{ $u->nama }}</td>
                             <td>{{ $u->username }}</td>
                             <td>{{ $u->email }}</td>
                             <td>{{ $u->no_telp }}</td>
-                            <td>{{ $u->city }}</td>
-                            <td>
-                                <a href="/admin/user/edit/{{ $u->id }}" class="btn btn-warning btn-sm">✏️ Edit</a>
+                            <td>{{ $u->kota}}</td>
+                            <td class="text-center">
+                                <a href="/admin/user/edit/{{ $u->id }}" class="btn btn-info btn-sm">✏️ Reset Pw</a>
                                 <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
                                     data-bs-target="#deleteModal" data-id="{{ $u->id }}">
                                     🗑️ Hapus
                                 </button>
-
-                                {{-- ...existing code... --}}
 
                                 {{-- Modal Konfirmasi Hapus --}}
                                 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"

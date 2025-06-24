@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('saldo_histories', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
-            $table->enum('tipe', ['beli', 'topup', ]);
+            $table->enum('tipe', ['beli', 'topup', 'reward']);
             $table->integer('jumlah');
             $table->string('keterangan', 255)->nullable();
             $table->timestamps();

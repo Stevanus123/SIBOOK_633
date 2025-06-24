@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('user')->onDelete('cascade');
             $table->foreignId('kategori_id')->constrained('categories', 'kategori_id')->onDelete('cascade');
             $table->string('judul', 75);
+            $table->integer('harga');
+            $table->integer('jumlah_halaman');
             $table->text('sinopsis');
             $table->string('file_naskah', 255);
             $table->string('sampul', 255)->nullable();

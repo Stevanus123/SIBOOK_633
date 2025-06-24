@@ -27,10 +27,15 @@ class Book extends Model
         return $this->belongsTo(Category::class, 'kategori_id', 'kategori_id');
     }
 
-        public function diskon()
+    public function diskon()
     {
         return $this->belongsTo(Diskon::class, 'diskon_id', 'diskon_id');
     }
-    
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItems::class, 'buku_id');
+    }
+
     protected $primaryKey = 'buku_id';
 }

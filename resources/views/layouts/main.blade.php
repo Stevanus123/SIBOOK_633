@@ -21,6 +21,16 @@
             --pink: #fd7272;
         }
 
+        .breadcrumb-item a {
+            color: #fd7272 !important;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item+.breadcrumb-item::before {
+            color: #fd7272;
+            font-size: 1.1em;
+        }
+
         .navbar-pastel {
             background-color: var(--peach);
         }
@@ -84,6 +94,18 @@
             color: var(--pink) !important;
         }
 
+        .kategori-grid {
+            display: grid;
+            grid-auto-flow: column;
+            grid-template-rows: repeat(10, auto);
+            gap: 3px 10px;
+            white-space: nowrap;
+        }
+
+        .kategori-grid li {
+            list-style: none;
+        }
+
         .search-wrapper {
             position: relative;
             display: flex;
@@ -110,7 +132,8 @@
         }
 
         .search-wrapper:hover input,
-        .search-wrapper.active input {
+        .search-wrapper.active input,
+        .search-wrapper input:not(:placeholder-shown) {
             width: 200px;
             opacity: 1;
         }
@@ -172,7 +195,7 @@
 
         .book-card {
             display: block;
-            width: 14rem;
+            width: 13.7rem;
             text-decoration: none;
             border-radius: 10px;
             overflow: hidden;
@@ -220,42 +243,58 @@
                                 <li class="nav-item px-2 ">
                                     <a class="nav-link {{ $active == 'home' ? 'active' : '' }}" href="/home">Home</a>
                                 </li>
+                                <li class="nav-item px-2 position-relative kategori-dropdown " id="kategoriParent">
+                                    <a class="nav-link {{ $active == 'kategori' ? 'active' : '' }}"
+                                        id="kategoriDropdown" style="cursor: pointer">
+                                        Kategori <i class="bi bi-chevron-down"></i>
+                                    </a>
+                                    <ul class="dropdown-menu-custom kategori-grid shadow" id="kategoriDropdownMenu"
+                                        style="display: none; position: absolute; left: 0; background: var(--krem); min-width: 600px; border-radius: 0.5rem; padding: 0.5rem; list-style: none;">
+                                        @foreach ($cate as $c)
+                                            <li>
+                                                <a class="dropdown-item-custom {{ $active == 'kategori' && ucfirst($key) == $c->nama_kategori ? 'active' : '' }}"
+                                                    href="/kategori/{{ strtolower($c->nama_kategori) }}">{{ $c->nama_kategori }}</a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </li>
+                                <li class="nav-item px-2 ">
+                                    <a class="nav-link {{ $active == 'promo' ? 'active' : '' }}"
+                                        href="/promo">Promo</a>
+                                </li>
+                                <li class="nav-item px-2">
+                                    <a class="nav-link {{ $active == 'penerbitan' ? 'active' : '' }}"
+                                        href="/penerbitan">Penerbitan</a>
+                                </li>
                             @else
                                 <li class="nav-item px-2 ">
                                     <a class="nav-link {{ $active == 'home' ? 'active' : '' }}" href="/">Home</a>
                                 </li>
+                                <li class="nav-item px-2">
+                                    <a class="nav-link" href="#" data-bs-toggle="modal"
+                                        data-bs-target="#loginModal">
+                                        Kategori</i>
+                                    </a>
+                                </li>
+                                <li class="nav-item px-2 ">
+                                    <a class="nav-link " data-bs-toggle="modal" data-bs-target="#loginModal"
+                                        href="#">Promo</a>
+                                </li>
                             @endif
-                            <li class="nav-item px-2 position-relative kategori-dropdown " id="kategoriParent">
-                                <a class="nav-link {{ $active == 'kategori' ? 'active' : '' }}" id="kategoriDropdown"
-                                    style="cursor: pointer">
-                                    Kategori <i class="bi bi-chevron-down"></i>
-                                </a>
-                                <ul class="dropdown-menu-custom" id="kategoriDropdownMenu"
-                                    style="display: none; position: absolute; left: 0; background: var(--krem); min-width: 180px;  border-radius: 0.5rem; padding: 0.5rem 0; list-style: none;">
-                                    @foreach ($cate as $c)
-                                        <li>
-                                            <a class="dropdown-item-custom {{ $active == 'kategori' && ucfirst($key) == $c->nama_kategori ? 'active' : '' }}"
-                                                href="/kategori/{{ strtolower($c->nama_kategori) }}">{{ $c->nama_kategori }}</a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </li>
-                            <li class="nav-item px-2 ">
-                                <a class="nav-link {{ $active == 'promo' ? 'active' : '' }}" href="/promo">Promo</a>
-                            </li>
-                            <li class="nav-item px-2">
-                                <a class="nav-link {{ $active == 'penerbitan' ? 'active' : '' }}"
-                                    href="/penerbitan">Penerbitan</a>
-                            </li>
                         </ul>
-                        <div class="d-flex align-items-center navbar-nav mb-2 mb-lg-0">
-                            <div class="search-wrapper me-2 nav-link">
-                                <form action="/search/{{ $active }}" method="GET" class="search-form">
-                                    <i class="bi bi-search"></i>
-                                    <input type="text" name="judul" placeholder="Cari buku..."
-                                        onkeydown="if(event.key==='Enter'){ this.form.submit(); }" />
-                                </form>
-                            </div>
+                        @if (Auth::check())
+                            <div class="d-flex align-items-center navbar-nav mb-2 mb-lg-0 me-4">
+                            @else
+                                <div class="d-flex align-items-center navbar-nav mb-2 mb-lg-0 gap-4 me-4">
+                        @endif
+                        <div class="search-wrapper me-2 nav-link">
+                            <form action="/search/{{ $active }}" method="GET" class="search-form">
+                                <i class="bi bi-search"></i>
+                                <input type="text" name="judul" placeholder="Cari buku..."
+                                    onkeydown="if(event.key==='Enter'){ this.form.submit(); }" />
+                            </form>
+                        </div>
+                        @if (Auth::check())
                             <a href="/cart" class="nav-link icon-btn px-3 {{ $active == 'cart' ? 'active' : '' }}"
                                 aria-label="Keranjang">
                                 <i class="bi bi-cart3"></i>
@@ -265,18 +304,56 @@
                                 aria-label="Profil">
                                 <i class="bi bi-person-circle"></i>
                             </a>
-                        </div>
+                        @else
+                            <a href="/login"
+                                class="btn btn-warning d-flex align-items-center gap-2 px-3 py-1 shadow-sm border-0 rounded fw-bolder">
+                                <i class="bi bi-box-arrow-in-right fs-5"></i>
+                                <span>Masuk</span>
+                            </a>
+                        @endif
                     </div>
                 </div>
             </nav>
         </header>
+        <!-- Modal Login -->
+        <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="background-color: var(--peach); border-radius: 1rem;">
+                    <div class="modal-header border-0 pb-0">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-exclamation-triangle-fill text-warning fs-3"></i>
+                            <h5 class="modal-title fw-bold" id="loginModalLabel" style="color: #5c3b28;">Akses Dibatasi
+                            </h5>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p class="mb-3" style="color: #5c3b28; font-size: 1.1rem;">
+                            Untuk mengakses fitur ini, Anda harus <span class="fw-bold text-warning">login</span>
+                            terlebih dahulu.
+                        </p>
+                    </div>
+                    <div class="modal-footer border-0 justify-content-center pb-4 gap-2">
+                        <a href="/regis" class="btn fw-bold px-4 ms-2"
+                            style="background-color: var(--pink); color: var(--peach);">
+                            <i class="bi bi-person-plus me-2"></i>Daftar
+                        </a>
+                        <a href="/login" class="btn btn-warning fw-bold px-4 shadow-sm" style="color: #5c3b28;">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <main style="flex: 1">
             <div class="container-fluid">
                 @if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert" id="alert-message">
                         <strong>{{ session('success') }}</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                            aria-label="Close"></button>
                     </div>
                     <script>
                         setTimeout(function() {
@@ -289,7 +366,8 @@
                 @if (session('error'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert-message">
                         <strong>{{ session('error') }}</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                            aria-label="Close"></button>
                     </div>
                     <script>
                         setTimeout(function() {
@@ -318,12 +396,14 @@
                     <div class="col-md-3 mb-3">
                         <h6 class="fw-semibold">Menu</h6>
                         <ul class="list-unstyled">
-                            <li><a href="/home" class="footer-link {{ $active == 'home' ? 'active' : '' }}">Home</a>
+                            <li><a href="/home"
+                                    class="footer-link {{ $active == 'home' ? 'active' : '' }}">Home</a>
                             </li>
                             <li><a href="/kategori"
                                     class="footer-link {{ $active == 'kategori' ? 'active' : '' }}">Kategori</a></li>
                             <li><a href="/promo"
-                                    class="footer-link {{ $active == 'promo' ? 'active' : '' }}">Promo</a></li>
+                                    class="footer-link {{ $active == 'promo' ? 'active' : '' }}">Promo</a>
+                            </li>
                             <li><a href="/penerbitan"
                                     class="footer-link {{ $active == 'penerbitan' ? 'active' : '' }}">Penerbitan</a>
                             </li>
@@ -406,7 +486,7 @@
         const dropdownMenu = document.getElementById('kategoriDropdownMenu');
 
         parent.addEventListener('mouseenter', () => {
-            dropdownMenu.style.display = 'block';
+            dropdownMenu.style.display = 'grid';
             document.getElementById('kategoriDropdown').innerHTML = 'Kategori <i class="bi bi-chevron-up"></i>';
         });
 

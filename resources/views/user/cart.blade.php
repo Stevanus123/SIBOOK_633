@@ -3,9 +3,6 @@
 @section('content')
     <!-- tampilan cart -->
     <div class="row my-3">
-        @php
-            $subtotal = 0;
-        @endphp
         <h2 class="text-center mb-3">Keranjang Belanjamu</h2>
         @if ($cart)
             <form action="/checkout" method="post">
@@ -26,13 +23,12 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($cartItems as $ci)
-                                        @php
-                                            $subtotal += $ci->harga * $ci->jumlah;
-                                        @endphp
                                         <tr class="align-middle">
                                             <td class="text-center">
-                                                <input type="checkbox" name="beli[]" class="form-check-input" value="{{ $ci->cartItems_id }}"
-                                                    style="transform: scale(1.3);">
+                                                <input type="checkbox" name="beli[]" class="form-check-input item-checkbox"
+                                                    value="{{ $ci->cartItems_id }}"
+                                                    data-harga="{{ $ci->harga * $ci->jumlah }}"
+                                                    style="transform: scale(1.3);" onchange="hitungSubtotal()">
                                             </td>
                                             <td><img src="{{ asset($ci->buku->gambar) }}" alt="{{ $ci->buku->judul }}"
                                                     width="40em" />
@@ -57,7 +53,8 @@
                     <!-- total  -->
                     <div class="col">
                         <div class="my-3 pb-3 shadow bg-white" style="border-radius: 10px; overflow: hidden">
-                            <h6 class="py-2 fw-bold ps-3 border-bottom border-dark" style="background-color: blanchedalmond">
+                            <h6 class="py-2 fw-bold ps-3 border-bottom border-dark"
+                                style="background-color: blanchedalmond">
                                 Total Pembayaran
                             </h6>
                             <table class="table border-light ms-3" style="width: 80%">
@@ -65,38 +62,23 @@
                                     <td>Subtotal</td>
                                     <td>
                                         Rp.
-                                        {{ number_format(
-                $subtotal,
-                0,
-                ',',
-                '.',
-            ) }}
+                                        <span id="subtotal-display">0</span>
                                     </td>
                                 </tr>
                                 <tr style="height: 4em" class="align-middle">
                                     <td>Diskon</td>
                                     <td>Rp.
-                                        {{ number_format(
-                $cart->diskon ? $subtotal * ($cart->diskon->persen / 100) : 0,
-                0,
-                ',',
-                '.',
-            ) }}
+                                        <span id="diskon-display">0</span>
                                     </td>
                                 </tr>
                                 <tr style="height: 4em" class="align-middle">
                                     <td>Total</td>
                                     <td>Rp.
-                                        {{ number_format(
-                $subtotal - ($cart->diskon ? $subtotal * ($cart->diskon->persen / 100) : 0),
-                0,
-                ',',
-                '.',
-            ) }}
+                                        <span id="total-display">0</span>
                                     </td>
                                 </tr>
                             </table>
-                            <input type="hidden" name="total" value="{{ $subtotal - ($cart->diskon ? $subtotal * ($cart->diskon->persen / 100) : 0) }}">
+                            <input type="hidden" name="total" id="total-hidden" value="0">
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary">Lanjut Pembayaran</button>
                             </div>
@@ -115,5 +97,38 @@
             </div>
         @endif
     </div>
+
+    <script>
+        const diskonPersen = {{ !empty($cart->diskon) ? $cart->diskon->persen : 0 }};
+
+        function formatRupiah(angka) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(angka).replace('Rp', '').trim();
+        }
+
+        function hitungSubtotal() {
+            let subtotal = 0;
+
+            document.querySelectorAll('.item-checkbox').forEach(cb => {
+                if (cb.checked) {
+                    subtotal += parseInt(cb.getAttribute('data-harga'));
+                }
+            });
+
+            const diskon = subtotal * (diskonPersen / 100);
+            const total = subtotal - diskon;
+
+            document.getElementById('subtotal-display').textContent = formatRupiah(subtotal);
+            document.getElementById('diskon-display').textContent = formatRupiah(diskon);
+            document.getElementById('total-display').textContent = formatRupiah(total);
+            document.getElementById('total-hidden').value = total;
+        }
+
+        document.addEventListener('DOMContentLoaded', hitungSubtotal);
+    </script>
+
 
 @endsection
