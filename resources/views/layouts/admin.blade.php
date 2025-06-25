@@ -44,6 +44,15 @@
             flex-grow: 1;
             padding: 20px;
         }
+        .breadcrumb-item a {
+            color: #fd7272 !important;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item+.breadcrumb-item::before {
+            color: #fd7272;
+            font-size: 1.1em;
+        }
     </style>
 </head>
 
@@ -54,13 +63,13 @@
         style="position: fixed; height:100vh; width:17rem; z-index: 1; overflow-y: auto;">
         <h4 class="text-center mt-3">📚 SiBook Admin</h4>
         <hr>
+        <a href="/admin/dashboard" class="{{ $active == 'dashboard' ? 'active' : '' }}">📈 Dashboard</a>
         <a href="/admin/buku" class="{{ $active == 'buku' ? 'active' : '' }}">📖 Kelola Buku</a>
         <a href="/admin/kategori" class="{{ $active == 'kategori' ? 'active' : '' }}">🏷️ Kategori</a>
         <a href="/admin/diskon" class="{{ $active == 'diskon' ? 'active' : '' }}">🎁 Diskon</a>
         <a href="/admin/user" class="{{ $active == 'pengguna' ? 'active' : '' }}">👥 Pengguna</a>
         <a href="/admin/saldo" class="{{ $active == 'saldo' ? 'active' : '' }}">💰 Saldo</a>
         <a href="/admin/terbit" class="{{ $active == 'terbit' ? 'active' : '' }}">➕ Penerbitan</a>
-        <a href="/admin/order" class="{{ $active == 'pesanan' ? 'active' : '' }}">🛒 Pesanan</a>
         <a href="/logout" class="mt-auto mb-3">🚪 Logout</a>
     </div>
 
@@ -112,6 +121,7 @@
             }
         });
     </script>
+    @stack('scripts')
 </body>
 
 </html>

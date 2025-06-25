@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BookController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DiskonController;
 use App\Http\Controllers\Admin\SaldoController;
 use App\Http\Controllers\Admin\TerbitController as AdminTerbitController;
@@ -33,6 +34,8 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     // admin prefix
     Route::prefix('admin')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'dashboard']);
+
         Route::get('/buku', [BookController::class, 'admin_buku']);
         Route::get('/buku/insert', [BookController::class, 'insert_buku']);
         Route::post('/buku/store', [BookController::class, 'store_buku']);

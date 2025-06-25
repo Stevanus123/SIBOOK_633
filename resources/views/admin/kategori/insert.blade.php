@@ -2,6 +2,12 @@
 @section('title', 'Admin SIBOOK | Insert Kategori')
 @section('judKonten', 'Insert Kategori')
 @section('content')
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="mt-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin/{{ $active }}">{{ ucfirst($active) }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Insert Kategori</li>
+        </ol>
+    </nav>
     <div class="container-fluid">
         <form action="/admin/kategori/store" method="POST" class="d-flex justify-content-center">
             <div class="row border p-3 shadow w-50" style="border-radius: 10px;">

@@ -11,6 +11,7 @@ use App\Models\Category;
 use App\Models\Order;
 use App\Models\TerbitBuku;
 use App\Models\User;
+use Illuminate\Support\Facades\File;
 
 class TerbitController extends Controller
 {
@@ -64,30 +65,37 @@ class TerbitController extends Controller
 
         return redirect('/penerbitan')->with('success', 'Buku berhasil diajukan! Silakan tunggu konfirmasi selanjutnya!');
     }
-    public function edit_terbit($id){
+    public function edit_terbit($id)
+    {
         $terbit = TerbitBuku::where('id', '=', $id)->first();
         $cate = Category::get();
 
         return view('user.terbit.update', ['active' => 'profile', 'terbit' => $terbit, 'cate' => $cate]);
     }
-    public function update_terbit(Request $request, $id){
+    public function update_terbit(Request $request, $id)
+    {
         $terbit = TerbitBuku::where('id', '=', $id)->first();
         if ($request->hasFile('sampul')) {
+            if ($terbit->sampul && File::exists(public_path($terbit->sampul))) {
+                File::delete(public_path($terbit->sampul));
+            }
             $filename = time() . '_' . $request->file('sampul')->getClientOriginalName();
             $request->file('sampul')->move(public_path('cover'), $filename);
             $cover = 'cover/' . $filename;
         } else $cover = $terbit->sampul;
 
         // file proses 
-        if ($request->hasFile('sampul')) {
-        $filename = time() . '_' . $request->file('naskah')->getClientOriginalName();
-        $request->file('naskah')->move(public_path('nasTerbit'), $filename);
-        $naskah = 'nasTerbit/' . $filename;
-        }
-        else $naskah = $terbit->file_naskah;
+        if ($request->hasFile('naskah')) {
+            if ($terbit->file_naskah && File::exists(public_path($terbit->file_naskah))) {
+                File::delete(public_path($terbit->file_naskah));
+            }
+            $filename = time() . '_' . $request->file('naskah')->getClientOriginalName();
+            $request->file('naskah')->move(public_path('nasTerbit'), $filename);
+            $naskah = 'nasTerbit/' . $filename;
+        } else $naskah = $terbit->file_naskah;
 
         $cate = Category::where('nama_kategori', '=', $request->kategori)->first();
-        
+
         $terbit->kategori_id = $cate->kategori_id;
         $terbit->judul = $request->judul;
         $terbit->harga = $request->harga;
@@ -100,9 +108,25 @@ class TerbitController extends Controller
 
         return redirect('/profile')->with('success', 'Data penerbitan berhasil diupdate!');
     }
-    public function delete_terbit($id){
+    public function delete_terbit($id)
+    {
         $terbit = TerbitBuku::where('id', '=', $id)->first();
         if ($terbit) {
+            if ($terbit->sampul && File::exists(public_path($terbit->sampul)))
+                File::delete(public_path($terbit->sampul));
+            if ($terbit->file_naskah && File::exists(public_path($terbit->file_naskah)))
+                File::delete(public_path($terbit->file_naskah));
+            $user = User::where('id', '=', Auth::id())->first();
+            $user->saldo -= 20000;
+            $user->save();
+
+            $saldoHistories = new SaldoHistories();
+            $saldoHistories->user_id = Auth::id();
+            $saldoHistories->tipe = 'gagal';
+            $saldoHistories->jumlah = 20000;
+            $saldoHistories->keterangan = 'Pengajuan buku dihapus!';
+            $saldoHistories->save();
+
             $terbit->delete();
             return redirect('/profile')->with('success', 'Penerbitan berhasil dihapus!');
         } else {

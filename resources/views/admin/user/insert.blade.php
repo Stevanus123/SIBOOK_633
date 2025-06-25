@@ -2,6 +2,12 @@
 @section('title', 'Admin SIBOOK | Insert User')
 @section('judKonten', 'Insert User')
 @section('content')
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="mt-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin/{{ $active }}">{{ ucfirst($active) }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Insert User</li>
+        </ol>
+    </nav>
     <div class="container-fluid">
         <form action="/admin/user/store" method="POST">
             <div class="row border p-3 shadow" style="border-radius: 10px;">

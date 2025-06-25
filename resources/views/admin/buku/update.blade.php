@@ -2,6 +2,12 @@
 @section('title', 'Admin SIBOOK | Update Buku')
 @section('judKonten', 'Update Buku')
 @section('content')
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="mt-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin/{{ $active }}">{{ ucfirst($active) }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Update Buku</li>
+        </ol>
+    </nav>
     <div class="container-fluid">
         <form action="/admin/buku/update/{{ $book->buku_id }}" method="POST" enctype="multipart/form-data">
             <div class="row border p-3 shadow" style="border-radius: 10px;">

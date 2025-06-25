@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     {
 
         View::composer('layouts.main', function ($view) {
-            $view->with('cate', Category::all());
+            $view->with('cate', Category::has('books')->get());
         });
     }
 }

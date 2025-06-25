@@ -51,7 +51,7 @@ class ProfileController extends Controller
     }
     public function baca_profile($judul)
     {
-        $book = Book::where('file_buku', '=', 'buku/' . $judul . '.pdf')->first();
+        $book = Book::where('judul', '=', $judul)->first();
         $order = Order::where('user_id', '=', Auth::id())->first();
         $pembelian = OrderItems::where('order_id', '=', $order->order_id)
             ->where('buku_id', $book->buku_id)

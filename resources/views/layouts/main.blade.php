@@ -249,7 +249,7 @@
                                         Kategori <i class="bi bi-chevron-down"></i>
                                     </a>
                                     <ul class="dropdown-menu-custom kategori-grid shadow" id="kategoriDropdownMenu"
-                                        style="display: none; position: absolute; left: 0; background: var(--krem); min-width: 600px; border-radius: 0.5rem; padding: 0.5rem; list-style: none;">
+                                        style="display: none; position: absolute; left: 0; background: var(--krem); min-width: 250px; border-radius: 0.5rem; padding: 0.5rem; list-style: none;">
                                         @foreach ($cate as $c)
                                             <li>
                                                 <a class="dropdown-item-custom {{ $active == 'kategori' && ucfirst($key) == $c->nama_kategori ? 'active' : '' }}"

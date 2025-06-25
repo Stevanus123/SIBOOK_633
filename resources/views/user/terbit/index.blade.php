@@ -37,16 +37,15 @@
 							<div class="card-header d-flex align-items-center my-2">
 								<img src="icon/orang-1.jpeg" class="border rounded-circle me-4" width="10%" />
 								<div class="text-start">
-									<p class="fw-bold mb-0 fs-5">Stevanus Denko F.A.</p>
+									<p class="fw-bold mb-0 fs-5">Gatot Subroto Simbolon</p>
 									<p class="mb-0" style="font-size: medium">
-										Ketua Yayasan Panti Rapih
+										Presiden Stargazer
 									</p>
 								</div>
 							</div>
 							<div class="card-body d-flex justify-content-center">
 								<p class="card-text fst-italic" style="text-align: justify; width: 80%">
-									"Saya sangat puas dengan layanan penerbitan buku ini.
-									Prosesnya cepat dan hasilnya memuaskan!"
+									"Keren sih yang buat website penjualan buku ini. Desain ramah di mata juga harganya ramah di kantong!"
 								</p>
 							</div>
 						</div>
@@ -58,16 +57,15 @@
 							<div class="card-header d-flex align-items-center my-2">
 								<img src="icon/orang-2.jpg" class="border rounded-circle me-4" width="10%" />
 								<div class="text-start">
-									<p class="fw-bold mb-0 fs-5">Stevanus Denko F.A.</p>
+									<p class="fw-bold mb-0 fs-5">Dave Aryanda Agape</p>
 									<p class="mb-0" style="font-size: medium">
-										Ketua Yayasan Panti Rapih
+										Presiden Astro Power
 									</p>
 								</div>
 							</div>
 							<div class="card-body d-flex justify-content-center">
 								<p class="card-text fst-italic" style="text-align: justify; width: 80%">
-									"Saya sangat puas dengan layanan penerbitan buku ini.
-									Prosesnya cepat dan hasilnya memuaskan!"
+									"Ga nyangka bisa sekeren ini! Sangat interaktif dan seperti penjualan secara nyata."
 								</p>
 							</div>
 						</div>
@@ -79,16 +77,15 @@
 							<div class="card-header d-flex align-items-center my-2">
 								<img src="icon/orang-3.jpeg" class="border rounded-circle me-4" width="10%" />
 								<div class="text-start">
-									<p class="fw-bold mb-0 fs-5">Stevanus Denko F.A.</p>
+									<p class="fw-bold mb-0 fs-5">Hans Gunawan</p>
 									<p class="mb-0" style="font-size: medium">
-										Ketua Yayasan Panti Rapih
+										Ketua Coding Informatika
 									</p>
 								</div>
 							</div>
 							<div class="card-body d-flex justify-content-center">
 								<p class="card-text fst-italic" style="text-align: justify; width: 80%">
-									"Saya sangat puas dengan layanan penerbitan buku ini.
-									Prosesnya cepat dan hasilnya memuaskan!"
+									"Iri banget liat desain dan proses bisnis yang sangat kompleks dan nyata seperti ini!"
 								</p>
 							</div>
 						</div>

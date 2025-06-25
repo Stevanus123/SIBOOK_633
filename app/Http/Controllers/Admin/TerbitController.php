@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Book;
+use App\Models\SaldoHistories;
 use Illuminate\Http\Request;
 
 use App\Models\TerbitBuku;
@@ -67,11 +68,23 @@ class TerbitController extends Controller
         return redirect('/admin/terbit')->with('success', 'Terbitan buku sudah disetujui!');
     }
 
-    public function tolak_terbit(Request $request, $id){
+    public function tolak_terbit(Request $request, $id)
+    {
         $terbit = TerbitBuku::where('id', '=', $id)->with('user')->first();
         $terbit->status = 'ditolak';
         $terbit->catatan = $request->catatan;
         $terbit->save();
+
+        $user = User::where('id', '=', $terbit->user_id)->first();
+        $user->saldo -= 20000;
+        $user->save();
+
+        $saldoHistories = new SaldoHistories();
+        $saldoHistories->user_id = $terbit->user_id;
+        $saldoHistories->tipe = 'gagal';
+        $saldoHistories->jumlah = 20000;
+        $saldoHistories->keterangan = 'Pengajuan buku ditolak!';
+        $saldoHistories->save();
 
         return redirect('/admin/terbit')->with('error', 'Terbitan buku ditolak!');
     }

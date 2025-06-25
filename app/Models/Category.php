@@ -14,4 +14,10 @@ class Category extends Model
     ];
 
     protected $primaryKey = 'kategori_id';
+
+    // Category.php
+    public function books()
+    {
+        return $this->hasMany(Book::class, 'kategori_id');
+    }
 }

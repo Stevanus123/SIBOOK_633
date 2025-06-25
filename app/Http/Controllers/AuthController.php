@@ -21,7 +21,7 @@ class AuthController extends Controller
             $user = Auth::user();
 
             if ($user->username === 'deden') {
-                return redirect('/admin/buku')->with('success', 'Selamat datang, Admin!');
+                return redirect('/admin/dashboard')->with('success', 'Selamat datang, Admin!');
             } else {
                 return redirect('/home')->with('alert', 'Selamat datang, ' . $user->nama . '!');
             }
